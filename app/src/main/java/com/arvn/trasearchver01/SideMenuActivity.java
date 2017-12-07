@@ -1,9 +1,12 @@
 package com.arvn.trasearchver01;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -13,9 +16,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TableLayout;
 
 public class SideMenuActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, HomeTab.OnFragmentInteractionListener, DashboardTab.OnFragmentInteractionListener, RecyclingCenterTab.OnFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +27,34 @@ public class SideMenuActivity extends AppCompatActivity
         setContentView(R.layout.activity_side_menu);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        //code in tabs
+        TabLayout tablayout = (TabLayout)findViewById(R.id.tabLayout);
+        tablayout.addTab(tablayout.newTab().setText("Home"));
+        tablayout.addTab(tablayout.newTab().setText("Dashboard"));
+        tablayout.addTab(tablayout.newTab().setText("Recycling Center"));
+        tablayout.setTabGravity(TabLayout.GRAVITY_FILL);
+
+        final ViewPager viewPager = (ViewPager)findViewById(R.id.pager);
+        final PagerAdapter pagerAdapter = new PagerAdapter(getSupportFragmentManager(), tablayout.getTabCount());
+        viewPager.setAdapter(pagerAdapter);
+        viewPager.setOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tablayout));
+
+        tablayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                viewPager.setCurrentItem(tab.getPosition());
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+
+            }
+        });
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -94,5 +126,10 @@ public class SideMenuActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
